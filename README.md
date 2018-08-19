@@ -6,7 +6,7 @@ It is recommended [use the shell script](https://github.com/birake/birinstall) t
 
 ***
 
-Quick installation of the BirakeCoin daemon under linux. See detailed instructions there [build-unix.md](build-unix.md)
+Quick installation of the BirakeCoin daemon under linux. See detailed instructions there [build-unix.md](https://github.com/birake/birakecoin/blob/master/doc/build-unix.md)
 
 Installation of libraries (using root user):
 
