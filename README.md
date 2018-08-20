@@ -20,7 +20,7 @@ Cloning the repository and compiling (use any user with the sudo group):
 
     cd
     git clone https://github.com/birake/birakecoin.git
-    cd BirakeCoin
+    cd birakecoin
     ./autogen.sh
     ./configure
     sudo make install
