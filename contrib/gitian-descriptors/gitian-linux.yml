@@ -27,9 +27,9 @@ packages:
 - "bsdmainutils"
 - "ca-certificates"
 - "python"
-reference_datetime: "2015-06-01 00:00:00"
+reference_datetime: "2019-01-25 00:00:00"
 remotes:
-- "url": "git@git.webflow.ro:intranet/birakecoin.git"
+- "url": "git@github.com:birake/birakecoin.git"
   "dir": "birakecoin"
 files: []
 script: |
