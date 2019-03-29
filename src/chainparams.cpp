@@ -180,6 +180,8 @@ public:
         strObfuscationPoolDummyAddress = "KF5tkvL4jkkUtQtjx6QiwoKHMGZ9mgbSAG";
 
         nStartMasternodePayments = 1533728621; //Wed, 25 Jun 2014 20:36:16 GMT
+        nStakeMinConfirmations = 720;   // Required number of confirmations
+        nStakeMinAmount = 5000 * COIN;    // Minimum required staking amount
     }
 
     const Checkpoints::CCheckpointData& Checkpoints() const
@@ -256,6 +258,8 @@ public:
         strSporkKey = "04f87be33617212d830c551bd670471007358e3f43328ead21bdbcf87ec8d7a3114374ba5b3293460da518e0a48a69f14f74bc7a16cf041675eab05620d1321668";
         strObfuscationPoolDummyAddress = "yJn4sdsMri15nyko6ha473PVXBrQY96MFT";
         nStartMasternodePayments = 1524873600; //Fri, 09 Jan 2015 21:05:58 GMT
+        nStakeMinConfirmations = 30;    // Required number of confirmations
+        nStakeMinAmount = 1000 * COIN;  // M
     }
     const Checkpoints::CCheckpointData& Checkpoints() const
     {

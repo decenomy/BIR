@@ -10,6 +10,7 @@
 #include "main.h"
 #include "masternodeman.h"
 #include "script/sign.h"
+#include "spork.h"
 #include "swifttx.h"
 #include "ui_interface.h"
 #include "util.h"
@@ -48,7 +49,7 @@ void CObfuscationPool::ProcessMessageObfuscation(CNode* pfrom, std::string& strC
 {
     if (fLiteMode) return; //disable all Obfuscation/Masternode related functionality
     if (!masternodeSync.IsBlockchainSynced()) return;
-
+    if (IsSporkActive(SPORK_17_LOCK_OBFS)) return;
     if (strCommand == "dsa") { //Obfuscation Accept Into Pool
 
         int errorID;
@@ -2283,6 +2284,7 @@ void CObfuscationPool::RelayCompletedTransaction(const int sessionID, const bool
 void ThreadCheckObfuScationPool()
 {
     if (fLiteMode) return; //disable all Obfuscation/Masternode related functionality
+    if (IsSporkActive(SPORK_17_LOCK_OBFS)) return;
 
     // Make this thread recognisable as the wallet flushing thread
     RenameThread("birakecoin-obfuscation");

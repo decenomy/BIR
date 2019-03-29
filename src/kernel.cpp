@@ -9,6 +9,7 @@
 #include "db.h"
 #include "kernel.h"
 #include "script/interpreter.h"
+#include "spork.h"
 #include "timedata.h"
 #include "util.h"
 
@@ -298,8 +299,12 @@ bool CheckStakeKernelHash(unsigned int nBits, const CBlock blockFrom, const CTra
     if (nTimeTx < nTimeBlockFrom) // Transaction timestamp violation
         return error("CheckStakeKernelHash() : nTime violation");
 
-    if (nTimeBlockFrom + nStakeMinAge > nTimeTx) // Min age requirement
-        return error("CheckStakeKernelHash() : min age violation - nTimeBlockFrom=%d nStakeMinAge=%d nTimeTx=%d", nTimeBlockFrom, nStakeMinAge, nTimeTx);
+    unsigned int nStakeMinAgeCurrent = nStakeMinAge;
+    if (IsSporkActive(SPORK_18_STAKE_REQ_AG) && nTimeBlockFrom >= GetSporkValue(SPORK_18_STAKE_REQ_AG)) {
+         nStakeMinAgeCurrent = nStakeMinAge2;
+    }
+    if (nTimeBlockFrom + nStakeMinAgeCurrent > nTimeTx) // Min age requirement
+         return error("CheckStakeKernelHash() : min age violation - nTimeBlockFrom=%d nStakeMinAgeCurrent=%d nTimeTx=%d", nTimeBlockFrom, nStakeMinAgeCurrent, nTimeTx);
 
     //grab difficulty
     uint256 bnTargetPerCoinDay;

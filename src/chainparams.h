@@ -95,6 +95,13 @@ public:
     std::string ObfuscationPoolDummyAddress() const { return strObfuscationPoolDummyAddress; }
     int64_t StartMasternodePayments() const { return nStartMasternodePayments; }
     CBaseChainParams::Network NetworkID() const { return networkID; }
+    /** Staking Requirements */
+    int Stake_MinConfirmations() const {
+        return nStakeMinConfirmations;
+    }
+    CAmount Stake_MinAmount() const {
+        return nStakeMinAmount;
+    }
 
 protected:
     CChainParams() {}
@@ -138,6 +145,8 @@ protected:
     std::string strSporkKey;
     std::string strObfuscationPoolDummyAddress;
     int64_t nStartMasternodePayments;
+    int nStakeMinConfirmations;
+    CAmount nStakeMinAmount;
 };
 
 /** 
