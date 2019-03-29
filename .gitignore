@@ -149,3 +149,12 @@ birakecoin-qt.creator
 birakecoin-qt.creator.user
 birakecoin-qt.files
 birakecoin-qt.includes
+
+src/secp256k1/build-aux/compile
+src/secp256k1/build-aux/config.guess
+src/secp256k1/build-aux/config.sub
+src/secp256k1/build-aux/depcomp
+src/secp256k1/build-aux/install-sh
+src/secp256k1/build-aux/missing
+src/secp256k1/build-aux/test-driver
+src/secp256k1/src/libsecp256k1-config.h
