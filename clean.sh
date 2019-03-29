@@ -2,3 +2,4 @@
 
 make clean
 sh autogen.sh
+./configure
