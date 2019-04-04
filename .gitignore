@@ -158,3 +158,4 @@ src/secp256k1/build-aux/install-sh
 src/secp256k1/build-aux/missing
 src/secp256k1/build-aux/test-driver
 src/secp256k1/src/libsecp256k1-config.h
+installed

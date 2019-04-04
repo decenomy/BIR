@@ -3538,6 +3538,8 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
                 return state.DoS(100, error("CheckBlock() : stake failed to find block index"));
 
             // Check block time vs stake age requirement.
+            //LogPrintf("CheckBlock() : Height: %s Block time:%s  age:%s now:%s \n", pindex->nHeight, (GetAdjustedTime() - pindex->GetBlockHeader().nTime), nStakeMinAge2, GetAdjustedTime());
+
             if (pindex->GetBlockHeader().nTime + nStakeMinAge2 > GetAdjustedTime())
                 return state.DoS(100, error("CheckBlock() : stake under min. stake age"));
 

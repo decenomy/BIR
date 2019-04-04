@@ -603,7 +603,7 @@ int CMasternodeMan::GetMasternodeRank(const CTxIn& vin, int64_t nBlockHeight, in
     // scan for winner
     BOOST_FOREACH (CMasternode& mn, vMasternodes) {
         if (mn.protocolVersion < minProtocol) {
-            LogPrintf("Skipping Masternode with obsolete version %d\n", mn.protocolVersion);
+            //LogPrintf("Skipping Masternode with obsolete version %d\n", mn.protocolVersion);
             continue;                                                       // Skip obsolete versions
         }
 

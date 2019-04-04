@@ -650,14 +650,14 @@ bool CMasternodePaymentWinner::IsValid(CNode* pnode, std::string& strError)
 
     if (!pmn) {
         strError = strprintf("Unknown Masternode %s", vinMasternode.prevout.hash.ToString());
-        LogPrintf("CMasternodePaymentWinner::IsValid - %s\n", strError);
+        //LogPrintf("CMasternodePaymentWinner::IsValid - %s\n", strError);
         mnodeman.AskForMN(pnode, vinMasternode);
         return false;
     }
 
     if (pmn->protocolVersion < ActiveProtocol()) {
         strError = strprintf("Masternode protocol too old %d - req %d", pmn->protocolVersion, ActiveProtocol());
-        LogPrintf("CMasternodePaymentWinner::IsValid - %s\n", strError);
+        //LogPrintf("CMasternodePaymentWinner::IsValid - %s\n", strError);
         return false;
     }
 
@@ -668,7 +668,7 @@ bool CMasternodePaymentWinner::IsValid(CNode* pnode, std::string& strError)
         // We don't want to print all of these messages, or punish them unless they're way off
         if (n > MNPAYMENTS_SIGNATURES_TOTAL * 2) {
             strError = strprintf("Masternode not in the top %d (%d)", MNPAYMENTS_SIGNATURES_TOTAL * 2, n);
-            LogPrintf("CMasternodePaymentWinner::IsValid - %s\n", strError);
+            //LogPrintf("CMasternodePaymentWinner::IsValid - %s\n", strError);
             if (masternodeSync.IsSynced()) Misbehaving(pnode->GetId(), 20);
         }
         return false;
