@@ -99,6 +99,10 @@ int64_t GetSporkValue(int nSporkID)
         if (nSporkID == SPORK_17_LOCK_OBFS) r = SPORK_17_LOCK_OBFS_DEFAULT;
         if (nSporkID == SPORK_18_STAKE_REQ_AG) r = SPORK_18_STAKE_REQ_AG_DEFAULT;
         if (nSporkID == SPORK_19_STAKE_REQ_SZ) r = SPORK_19_STAKE_REQ_SZ_DEFAULT;
+        if (nSporkID == SPORK_20_HALVING) r = SPORK_20_HALVING_DEFAULT;
+        if (nSporkID == SPORK_21_HALVING) r = SPORK_21_HALVING_DEFAULT;
+        if (nSporkID == SPORK_22_HALVING) r = SPORK_22_HALVING_DEFAULT;
+        if (nSporkID == SPORK_23_HALVING) r = SPORK_23_HALVING_DEFAULT;
 
         if (r == -1) LogPrintf("GetSpork::Unknown Spork %d\n", nSporkID);
     }
@@ -258,7 +262,10 @@ int CSporkManager::GetSporkIDByName(std::string strName)
     if (strName == "SPORK_17_LOCK_OBFS") return SPORK_17_LOCK_OBFS;
     if (strName == "SPORK_18_STAKE_REQ_AG") return SPORK_18_STAKE_REQ_AG;
     if (strName == "SPORK_19_STAKE_REQ_SZ") return SPORK_19_STAKE_REQ_SZ;
-
+    if (strName == "SPORK_20_HALVING") return SPORK_20_HALVING;
+    if (strName == "SPORK_21_HALVING") return SPORK_21_HALVING;
+    if (strName == "SPORK_22_HALVING") return SPORK_22_HALVING;
+    if (strName == "SPORK_23_HALVING") return SPORK_23_HALVING;
     return -1;
 }
 
@@ -280,6 +287,10 @@ std::string CSporkManager::GetSporkNameByID(int id)
     if (id == SPORK_17_LOCK_OBFS) return "SPORK_17_LOCK_OBFS";
     if (id == SPORK_18_STAKE_REQ_AG) return "SPORK_18_STAKE_REQ_AG";
     if (id == SPORK_19_STAKE_REQ_SZ) return "SPORK_19_STAKE_REQ_SZ";
+    if (id == SPORK_20_HALVING) return "SPORK_20_HALVING";
+    if (id == SPORK_21_HALVING) return "SPORK_21_HALVING";
+    if (id == SPORK_22_HALVING) return "SPORK_22_HALVING";
+    if (id == SPORK_23_HALVING) return "SPORK_23_HALVING";
 
     return "Unknown";
 }

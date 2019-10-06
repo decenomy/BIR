@@ -1856,23 +1856,19 @@ int64_t GetBlockValue(int nHeight)
 	else if (nHeight <= 499999 && nHeight >= 490000) {
         nSubsidy = 68 * COIN;
     }
-    else if (nHeight <= 999999 && nHeight >= 500000) {
-        nSubsidy = 60 * COIN;
-    }
-    else if (nHeight <= 1999999 && nHeight >= 1000000) {
-        nSubsidy = 50 * COIN;
-    }
-    else if (nHeight <= 4999999 && nHeight >= 2000000) {
-        nSubsidy = 40 * COIN;
-    }
-    else if (nHeight <= 9999999 && nHeight >= 5000000) {
-        nSubsidy = 35 * COIN;
-    }
-    else if (nHeight <= 19999999 && nHeight >= 10000000) {
-        nSubsidy = 30 * COIN;
-    }
     else {
-        nSubsidy = 10 * COIN;
+        nSubsidy = 60 * COIN;
+        if (IsSporkActive(SPORK_20_HALVING) && nHeight >= GetSporkValue(SPORK_20_HALVING)) {
+           if (nHeight <= GetSporkValue(SPORK_21_HALVING)-1 && nHeight >= 500000) {
+                nSubsidy = 30 * COIN;
+           } else if (nHeight <= GetSporkValue(SPORK_22_HALVING)-1 && nHeight >= GetSporkValue(SPORK_21_HALVING)) {
+                nSubsidy = 15 * COIN;
+           } else if (nHeight <= GetSporkValue(SPORK_23_HALVING)-1 && nHeight >= GetSporkValue(SPORK_22_HALVING)) {
+                nSubsidy = 8 * COIN;
+           } else {
+                nSubsidy = 4 * COIN;
+           }
+        }
     }
     return nSubsidy;
 }
@@ -1889,170 +1885,10 @@ int64_t GetMasternodePayment(int nHeight, int64_t blockValue, int nMasternodeCou
     if (nHeight < 100)
         return 0;
     ret = blockValue * 0.9;
-    /*
-    if (nHeight < 20000) {
-        ret = blockValue * 0.75;
+    if (IsSporkActive(SPORK_20_HALVING) && nHeight >= GetSporkValue(SPORK_20_HALVING)) {
+        ret = blockValue * 0.7;
     }
-	else if (nHeight <= 29999 && nHeight >= 20000) {
-        ret = blockValue * 0.70;
-    }
-	else if (nHeight <= 39999 && nHeight >= 30000) {
-        ret = blockValue * 0.65;
-    }
-	else if (nHeight <= 49999 && nHeight >= 40000) {
-        ret = blockValue * 0.655;
-    }
-	else if (nHeight <= 59999 && nHeight >= 50000) {
-        ret = blockValue * 0.66;
-    }
-	else if (nHeight <= 69999 && nHeight >= 60000) {
-        ret = blockValue * 0.665;
-    }
-	else if (nHeight <= 79999 && nHeight >= 70000) {
-        ret = blockValue * 0.67;
-    }
-	else if (nHeight <= 89999 && nHeight >= 80000) {
-        ret = blockValue * 0.675;
-    }
-	else if (nHeight <= 99999 && nHeight >= 90000) {
-        ret = blockValue * 0.68;
-    }
-	else if (nHeight <= 109999 && nHeight >= 100000) {
-        ret = blockValue * 0.685;
-    }
-	else if (nHeight <= 119999 && nHeight >= 110000) {
-        ret = blockValue * 0.69;
-    }
-	else if (nHeight <= 129999 && nHeight >= 120000) {
-        ret = blockValue * 0.695;
-    }
-	else if (nHeight <= 139999 && nHeight >= 130000) {
-        ret = blockValue * 0.70;
-    }
-	else if (nHeight <= 149999 && nHeight >= 140000) {
-        ret = blockValue * 0.705;
-    }
-	else if (nHeight <= 159999 && nHeight >= 150000) {
-        ret = blockValue * 0.71;
-    }
-	else if (nHeight <= 169999 && nHeight >= 160000) {
-        ret = blockValue * 0.715;
-    }
-	else if (nHeight <= 179999 && nHeight >= 170000) {
-        ret = blockValue * 0.72;
-    }
-	else if (nHeight <= 189999 && nHeight >= 180000) {
-        ret = blockValue * 0.725;
-    }
-	else if (nHeight <= 199999 && nHeight >= 190000) {
-        ret = blockValue * 0.73;
-    }
-	else if (nHeight <= 209999 && nHeight >= 200000) {
-        ret = blockValue * 0.735;
-    }
-	else if (nHeight <= 219999 && nHeight >= 210000) {
-        ret = blockValue * 0.74;
-    }
-	else if (nHeight <= 229999 && nHeight >= 220000) {
-        ret = blockValue * 0.745;
-    }
-	else if (nHeight <= 239999 && nHeight >= 230000) {
-        ret = blockValue * 0.75;
-    }
-	else if (nHeight <= 249999 && nHeight >= 240000) {
-        ret = blockValue * 0.755;
-    }
-	else if (nHeight <= 259999 && nHeight >= 250000) {
-        ret = blockValue * 0.76;
-    }
-	else if (nHeight <= 269999 && nHeight >= 260000) {
-        ret = blockValue * 0.765;
-    }
-	else if (nHeight <= 279999 && nHeight >= 270000) {
-        ret = blockValue * 0.77;
-    }
-	else if (nHeight <= 289999 && nHeight >= 280000) {
-        ret = blockValue * 0.775;
-    }
-	else if (nHeight <= 299999 && nHeight >= 290000) {
-        ret = blockValue * 0.78;
-    }
-	else if (nHeight <= 309999 && nHeight >= 300000) {
-        ret = blockValue * 0.785;
-    }
-	else if (nHeight <= 319999 && nHeight >= 310000) {
-        ret = blockValue * 0.79;
-    }
-	else if (nHeight <= 329999 && nHeight >= 320000) {
-        ret = blockValue * 0.795;
-    }
-	else if (nHeight <= 339999 && nHeight >= 330000) {
-        ret = blockValue * 0.80;
-    }
-	else if (nHeight <= 349999 && nHeight >= 340000) {
-        ret = blockValue * 0.805;
-    }
-	else if (nHeight <= 359999 && nHeight >= 350000) {
-        ret = blockValue * 0.81;
-    }
-	else if (nHeight <= 369999 && nHeight >= 360000) {
-        ret = blockValue * 0.815;
-    }
-	else if (nHeight <= 379999 && nHeight >= 370000) {
-        ret = blockValue * 0.82;
-    }
-	else if (nHeight <= 389999 && nHeight >= 380000) {
-        ret = blockValue * 0.825;
-    }
-	else if (nHeight <= 399999 && nHeight >= 390000) {
-        ret = blockValue * 0.83;
-    }
-	else if (nHeight <= 409999 && nHeight >= 400000) {
-        ret = blockValue * 0.835;
-    }
-	else if (nHeight <= 419999 && nHeight >= 410000) {
-        ret = blockValue * 0.84;
-    }
-	else if (nHeight <= 429999 && nHeight >= 420000) {
-        ret = blockValue * 0.845;
-    }
-	else if (nHeight <= 439999 && nHeight >= 430000) {
-        ret = blockValue * 0.85;
-    }
-	else if (nHeight <= 449999 && nHeight >= 440000) {
-        ret = blockValue * 0.855;
-    }
-	else if (nHeight <= 459999 && nHeight >= 450000) {
-        ret = blockValue * 0.86;
-    }
-	else if (nHeight <= 469999 && nHeight >= 460000) {
-        ret = blockValue * 0.865;
-    }
-	else if (nHeight <= 479999 && nHeight >= 470000) {
-        ret = blockValue * 0.87;
-    }
-	else if (nHeight <= 489999 && nHeight >= 480000) {
-        ret = blockValue * 0.875;
-    }
-	else if (nHeight <= 499999 && nHeight >= 490000) {
-        ret = blockValue * 0.88;
-    }
-	else if (nHeight <= 509999 && nHeight >= 500000) {
-        ret = blockValue * 0.885;
-    }
-	else if (nHeight <= 519999 && nHeight >= 510000) {
-        ret = blockValue * 0.89;
-    }
-	else if (nHeight <= 529999 && nHeight >= 520000) {
-        ret = blockValue * 0.895;
-    }
-	else if (nHeight >= 530000) {
-        ret = blockValue * 0.90;
-    }
-    else {
-		ret = blockValue * 0.50;
-	}
-    */
+
 	return ret;
 }
 
@@ -5896,7 +5732,7 @@ int ActiveProtocol()
     // SPORK_14 was used for 70710. Leave it 'ON' so they don't see < 70710 nodes. They won't react to SPORK_15
     // messages because it's not in their code
 
-    if (IsSporkActive(SPORK_15_NEW_PROTOCOL_ENFORCEMENT_2)) {
+    if (IsSporkActive(SPORK_14_NEW_PROTOCOL_ENFORCEMENT)) {
             return MIN_PEER_PROTO_VERSION_AFTER_ENFORCEMENT;
     }
 
