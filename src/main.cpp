@@ -1858,12 +1858,12 @@ int64_t GetBlockValue(int nHeight)
     }
     else {
         nSubsidy = 60 * COIN;
-        if (IsSporkActive(SPORK_20_HALVING))) {
-           if (nHeight <= GetSporkValue(SPORK_20_HALVING)-1 && nHeight >= 500000) {
+        if (IsSporkActive(SPORK_20_HALVING) && nHeight >= GetSporkValue(SPORK_20_HALVING)) {
+           if (nHeight <= GetSporkValue(SPORK_21_HALVING)-1 && nHeight >= 500000) {
                 nSubsidy = 30 * COIN;
-           } else if (nHeight <= GetSporkValue(SPORK_21_HALVING)-1 && nHeight >= GetSporkValue(SPORK_20_HALVING)) {
-                nSubsidy = 15 * COIN;
            } else if (nHeight <= GetSporkValue(SPORK_22_HALVING)-1 && nHeight >= GetSporkValue(SPORK_21_HALVING)) {
+                nSubsidy = 15 * COIN;
+           } else if (nHeight <= GetSporkValue(SPORK_23_HALVING)-1 && nHeight >= GetSporkValue(SPORK_22_HALVING)) {
                 nSubsidy = 8 * COIN;
            } else {
                 nSubsidy = 4 * COIN;
