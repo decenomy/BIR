@@ -152,6 +152,8 @@ public:
 
         vSeeds.push_back(CDNSSeedData("s1.birake.com", "seeder1.birake.com"));         // Single node address
         vSeeds.push_back(CDNSSeedData("s2.birake.com", "seeder2.birake.com"));
+        vSeeds.push_back(CDNSSeedData("s3.birake.com", "seeder3.birake.com"));
+
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1, 45);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1, 13);
