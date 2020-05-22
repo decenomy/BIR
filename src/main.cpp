@@ -1007,7 +1007,7 @@ bool GetCoinAge(const CTransaction& tx, const unsigned int nTxTime, uint64_t& nC
     uint256 bnCentSecond = 0; // coin age in the unit of cent-seconds
     nCoinAge = 0;
     unsigned int nStakeMinAgeCurrent = nStakeMinAge;
-    if (IsSporkActive(SPORK_18_STAKE_REQ_AG) && nTxTime >= GetSporkValue(SPORK_18_STAKE_REQ_AG)) {
+    if (nTxTime >= 1554312600) {
         nStakeMinAgeCurrent = nStakeMinAge2;
     }
 
@@ -1858,12 +1858,12 @@ int64_t GetBlockValue(int nHeight)
     }
     else {
         nSubsidy = 60 * COIN;
-        if (IsSporkActive(SPORK_20_HALVING) && nHeight >= GetSporkValue(SPORK_20_HALVING)) {
-           if (nHeight <= GetSporkValue(SPORK_21_HALVING)-1 && nHeight >= 500000) {
+        if (nHeight >= 800888) {
+           if (nHeight <= 870500-1 && nHeight >= 500000) {
                 nSubsidy = 30 * COIN;
-           } else if (nHeight <= GetSporkValue(SPORK_22_HALVING)-1 && nHeight >= GetSporkValue(SPORK_21_HALVING)) {
+           } else if (nHeight <= 1000000-1 && nHeight >= 870500) {
                 nSubsidy = 15 * COIN;
-           } else if (nHeight <= GetSporkValue(SPORK_23_HALVING)-1 && nHeight >= GetSporkValue(SPORK_22_HALVING)) {
+           } else if (nHeight <= 1200000-1 && nHeight >= 1000000) {
                 nSubsidy = 8 * COIN;
            } else {
                 nSubsidy = 4 * COIN;
@@ -1885,10 +1885,15 @@ int64_t GetMasternodePayment(int nHeight, int64_t blockValue, int nMasternodeCou
     if (nHeight < 100)
         return 0;
     ret = blockValue * 0.9;
-    if (IsSporkActive(SPORK_20_HALVING) && nHeight >= GetSporkValue(SPORK_20_HALVING)) {
+    if (nHeight >= 800888) {
         ret = blockValue * 0.7;
     }
-
+    if (nHeight >= 1000000) {
+        ret = blockValue * 0.4;
+    }
+    if (nHeight >= 1200000) {
+        ret = blockValue * 0.2;
+    }
 	return ret;
 }
 
@@ -3357,7 +3362,7 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
             if (block.vtx[i].IsCoinStake())
                 return state.DoS(100, error("CheckBlock() : more than one coinstake"));
 
-        if (IsSporkActive(SPORK_18_STAKE_REQ_AG) && block.GetBlockTime() >= GetSporkValue(SPORK_18_STAKE_REQ_AG)) {
+        if (block.GetBlockTime() >= 1554312600) {
 
             // Check for coin age.
             // First try finding the previous transaction in database.
@@ -3385,11 +3390,6 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
 
         }
 
-        if (IsSporkActive(SPORK_19_STAKE_REQ_SZ) && block.GetBlockTime() >= GetSporkValue(SPORK_19_STAKE_REQ_SZ)) {
-            // Check for minimum value.
-            if (block.vtx[1].vout[1].nValue < Params().Stake_MinAmount())
-                return state.DoS(100, error("CheckBlock() : stake under min. stake value"));
-        }
     }
 
     // ----------- swiftTX transaction scanning -----------
@@ -5732,22 +5732,24 @@ int ActiveProtocol()
     // SPORK_14 was used for 70710. Leave it 'ON' so they don't see < 70710 nodes. They won't react to SPORK_15
     // messages because it's not in their code
 
+/*
     if (IsSporkActive(SPORK_14_NEW_PROTOCOL_ENFORCEMENT)) {
             return MIN_PEER_PROTO_VERSION_AFTER_ENFORCEMENT;
     }
 
     return MIN_PEER_PROTO_VERSION_BEFORE_ENFORCEMENT;
-
+*/
 
 
     // SPORK_15 is used for 70910. Nodes < 70910 don't see it and still get their protocol version via SPORK_14 and their 
     // own ModifierUpgradeBlock()
-/*
-    if (IsSporkActive(SPORK_15_NEW_PROTOCOL_ENFORCEMENT_2))
+
+    if (IsSporkActive(SPORK_15_NEW_PROTOCOL_ENFORCEMENT_2)) {
             return MIN_PEER_PROTO_VERSION_AFTER_ENFORCEMENT;
+    }
 
     return MIN_PEER_PROTO_VERSION_BEFORE_ENFORCEMENT;
-    */
+
 }
 
 // requires LOCK(cs_vRecvMsg)

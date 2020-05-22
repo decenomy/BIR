@@ -300,7 +300,7 @@ bool CheckStakeKernelHash(unsigned int nBits, const CBlock blockFrom, const CTra
         return error("CheckStakeKernelHash() : nTime violation");
 
     unsigned int nStakeMinAgeCurrent = nStakeMinAge;
-    if (IsSporkActive(SPORK_18_STAKE_REQ_AG) && nTimeBlockFrom >= GetSporkValue(SPORK_18_STAKE_REQ_AG)) {
+    if (nTimeBlockFrom >= 1554312600) {
          nStakeMinAgeCurrent = nStakeMinAge2;
     }
     if (nTimeBlockFrom + nStakeMinAgeCurrent > nTimeTx) // Min age requirement

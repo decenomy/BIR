@@ -1568,15 +1568,13 @@ bool CWallet::SelectStakeCoins(std::set<std::pair<const CWalletTx*, unsigned int
 
     unsigned int nStakeMinAgeCurrent = nStakeMinAge;
     int nStakeDepth = Params().COINBASE_MATURITY();
-    if (IsSporkActive(SPORK_18_STAKE_REQ_AG)) {
-        nStakeMinAgeCurrent = nStakeMinAge2;
-        nStakeDepth = Params().Stake_MinConfirmations();
-    }
+
+    nStakeMinAgeCurrent = nStakeMinAge2;
+    nStakeDepth = Params().Stake_MinConfirmations();
+
 
     CAmount nStakeAmount = 0;
-    if (IsSporkActive(SPORK_19_STAKE_REQ_SZ)) {
-        nStakeAmount = Params().Stake_MinAmount();
-    }
+
 
     BOOST_FOREACH (const COutput& out, vCoins) {
         //make sure not to outrun target amount
@@ -1615,15 +1613,11 @@ bool CWallet::MintableCoins()
     AvailableCoins(vCoins, true);
     unsigned int nStakeMinAgeCurrent = nStakeMinAge;
     int nMinDepth = Params().COINBASE_MATURITY();
-    if (IsSporkActive(SPORK_18_STAKE_REQ_AG)) {
-        nStakeMinAgeCurrent = nStakeMinAge2;
-        nMinDepth = Params().Stake_MinConfirmations();
-    }
+
+    nStakeMinAgeCurrent = nStakeMinAge2;
+    nMinDepth = Params().Stake_MinConfirmations();
 
     CAmount nMinAmount = 0.0;
-    if (IsSporkActive(SPORK_19_STAKE_REQ_SZ)) {
-        nMinAmount = Params().Stake_MinAmount();
-    }
 
     BOOST_FOREACH (const COutput& out, vCoins) {
    // Make sure minimum depth has been matched.
