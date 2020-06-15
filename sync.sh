@@ -1,2 +1,3 @@
 rm -rf ../birakecoin/*
-cp -rp * birakecoin/
+cp -RP * ../birakecoin/
+cp -RP .gitignore ../birakecoin/
