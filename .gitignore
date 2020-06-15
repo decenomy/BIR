@@ -1,30 +1,22 @@
-/deploy.sh
-dpi72.background.tiff
-dpi36.background.tiff
-depends/x86_64-apple-darwin11/
-depends/MacOSX10.11.sdk.tar.xz
-/built
-depends/x86_64-linux-gnu
-osx_volname
-/dist
-depends/i686-w64-mingw32
-src/obj/build.h
-birakecoin-qt.creator.user
+.gitignore
 *.sublime-project
 *.sublime-workspace
 todo.txt
 reset-files.bash
-.idea/
 
 *.tar.gz
-*.pyc
+dist
 *.exe
-src/birakecoin
+src/pivx
+src/pivxd
+src/pivx-cli
+src/pivx-tx
 src/birakecoind
 src/birakecoin-cli
 src/birakecoin-tx
-src/test/test_birakecoin
-src/qt/test/test_birakecoin-qt
+src/bench/bench_pivx
+src/test/test_pivx
+src/qt/test/test_pivx-qt
 
 # autoreconf
 Makefile.in
@@ -46,21 +38,16 @@ build-aux/test-driver
 config.log
 config.status
 configure
+confdefs.h
+conftest.cpp
+conftest.err
 libtool
-src/config/birakecoin-config.h
-src/config/birakecoin-config.h.in
+src/config/pivx-config.h
+src/config/pivx-config.h.in
 src/config/stamp-h1
 share/setup.nsi
 share/qt/Info.plist
 contrib/devtools/split-debug.sh
-src/secp256k1/build-aux/ltmain.sh
-src/secp256k1/build-aux/m4/libtool.m4
-src/secp256k1/build-aux/m4/ltoptions.m4
-src/secp256k1/build-aux/m4/ltsugar.m4
-src/secp256k1/build-aux/m4/ltversion.m4
-src/secp256k1/build-aux/m4/lt~obsolete.m4
-src/secp256k1/libsecp256k1.pc
-#src/secp256k1/src/libsecp256k1-config.h.in
 
 src/univalue/gen
 
@@ -69,8 +56,6 @@ src/qt/moc_*.cpp
 src/qt/forms/ui_*.h
 
 src/qt/test/moc*.cpp
-
-birakecoin.*
 
 .deps
 .dirstamp
@@ -83,7 +68,8 @@ birakecoin.*
 *.pyc
 *.o
 *.o-*
-.birakecoin
+*.patch
+.pivx
 *.a
 *.pb.cc
 *.pb.h
@@ -102,12 +88,14 @@ birakecoin.*
 # Compilation and Qt preprocessor part
 *.qm
 Makefile
+pivx-qt
 birakecoin-qt
 BirakeCoin-Qt.app
+background.tiff*
 
 # Unit-tests
 Makefile.test
-birakecoin-qt_test
+pivx-qt_test
 src/test/buildenv.py
 
 # Resources cpp
@@ -123,7 +111,7 @@ build
 #lcov
 *.gcno
 /*.info
-test_birakecoin.coverage/
+test_pivx.coverage/
 total.coverage/
 coverage_percent.txt
 
@@ -131,10 +119,13 @@ coverage_percent.txt
 linux-coverage-build
 linux-build
 win32-build
+test/config.ini
+test/cache/*
 qa/pull-tester/run-bitcoind-for-test.sh
 qa/pull-tester/tests-config.sh
 qa/pull-tester/cache/*
 qa/pull-tester/test.*/*
+cache/*
 
 !src/leveldb*/Makefile
 
@@ -142,20 +133,22 @@ qa/pull-tester/test.*/*
 .project
 /doc/doxygen/
 /nbproject/
-/keys/
-background.tif*
-birakecoin-qt.config
-birakecoin-qt.creator
-birakecoin-qt.creator.user
-birakecoin-qt.files
-birakecoin-qt.includes
+libbitcoinconsensus.pc
+.idea
+CMakeLists.txt
+cmake-build-debug
 
-src/secp256k1/build-aux/compile
-src/secp256k1/build-aux/config.guess
-src/secp256k1/build-aux/config.sub
-src/secp256k1/build-aux/depcomp
-src/secp256k1/build-aux/install-sh
-src/secp256k1/build-aux/missing
-src/secp256k1/build-aux/test-driver
-src/secp256k1/src/libsecp256k1-config.h
-installed
+moc_*
+*.tmp
+ui_*
+build*
+pivxd.*
+pivxd-new-gui.*
+birake.cflags
+birake.config
+birake.creator
+birake.creator.user
+birake.cxxflags
+birake.files
+birake.includes
+sync.sh

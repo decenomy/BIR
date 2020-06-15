@@ -1,2 +1,2 @@
 # Linked code is Expat - only Debian packaging is GPL-2+
-birakecoin-qt: possible-gpl-code-linked-with-openssl
+pivx-qt: possible-gpl-code-linked-with-openssl

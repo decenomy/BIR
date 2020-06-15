@@ -1,208 +1,88 @@
-BirakeCoin Core version 2.3.1 is now available from:
+(note: this is a temporary file, to be added-to by anybody, and moved to release-notes at release time)
 
-  <https://github.com/birake/birakecoin/releases>
+PIVX Core version *version* is now available from:  <https://github.com/pivx-project/pivx/releases>
 
-This is a new minor version release, including various bug fixes and
-performance improvements, as well as updated translations.
+This is a new major version release, including various bug fixes and performance improvements, as well as updated translations.
 
-Please report bugs using the issue tracker at github:
+Please report bugs using the issue tracker at github: <https://github.com/pivx-project/pivx/issues>
 
-  <https://github.com/birake/birakecoin/issues>
+
+Mandatory Update
+==============
+
+
+How to Upgrade
+==============
+
+If you are running an older version, shut it down. Wait until it has completely shut down (which might take a few minutes for older versions), then run the installer (on Windows) or just copy over /Applications/PIVX-Qt (on Mac) or pivxd/pivx-qt (on Linux).
+
 
 Compatibility
 ==============
 
-BirakeCoin Core is extensively tested on multiple operating systems using
-the Linux kernel, macOS 10.8+, and Windows Vista and later.
+PIVX Core is extensively tested on multiple operating systems using the Linux kernel, macOS 10.10+, and Windows 7 and later.
 
-Microsoft ended support for Windows XP on [April 8th, 2014](https://www.microsoft.com/en-us/WindowsForBusiness/end-of-xp-support),
-No attempt is made to prevent installing or running the software on Windows XP, you
-can still do so at your own risk but be aware that there are known instabilities and issues.
-Please do not report issues about Windows XP to the issue tracker.
+Microsoft ended support for Windows XP on [April 8th, 2014](https://www.microsoft.com/en-us/WindowsForBusiness/end-of-xp-support), No attempt is made to prevent installing or running the software on Windows XP, you can still do so at your own risk but be aware that there are known instabilities and issues. Please do not report issues about Windows XP to the issue tracker.
 
-BirakeCoin Core should also work on most other Unix-like systems but is not
-frequently tested on them.
+Apple released it's last Mountain Lion update August 13, 2015, and officially ended support on [December 14, 2015](http://news.fnal.gov/2015/10/mac-os-x-mountain-lion-10-8-end-of-life-december-14/). PIVX Core software starting with v3.2.0 will no longer run on MacOS versions prior to Yosemite (10.10). Please do not report issues about MacOS versions prior to Yosemite to the issue tracker.
+
+PIVX Core should also work on most other Unix-like systems but is not frequently tested on them.
+
 
 Notable Changes
-===============
+==============
 
-RPC changes
---------------
+(Developers: add your notes here as part of your pull requests whenever possible)
 
-#### Update of RPC commands to comply with the forthcoming RPC Standards PIP ####
+*version* Change log
+==============
 
-| Old Command | New Command | Notes |
-| --- | --- | --- |
-| `masternode count` | `getmasternodecount` | |
-| `masternode list` | `listmasternodes` | |
-| `masternodelist` | `listmasternodes` | renamed |
-| `masternode connect` | `masternodeconnect` | |
-| `masternode current` | `getcurrentmasternode` | |
-| `masternode debug` | `masternodedebug` | |
-| `masternode enforce` |  | removed |
-| `masternode outputs` | `getmasternodeoutputs` | |
-| `masternode status` | `getmasternodestatus` | |
-| `masternode list-conf` | `listmasternodeconf` | added optional filter |
-| `masternode genkey` | `createmasternodekey` | |
-| `masternode winners` | `listmasternodewinners` | |
-| `masternode start` | `startmasternode` | see notes below |
-| `masternode start-alias` | `startmasternode` | see notes below |
-| `masternode start-<mode>` | `startmasternode` | see notes below |
-| `masternode create` | | removed - not implemented |
-| `masternode calcscore` | `listmasternodescores` | |
-| --- | --- | --- |
-| `mnbudget prepare` | `preparebudget` | see notes below |
-| `mnbudget submit` | `submitbudget` | see notes below |
-| `mnbudget vote-many` | `mnbudgetvote` | see notes below |
-| `mnbudget vote-alias` | `mnbudgetvote` | see notes below |
-| `mnbudget vote` | `mnbudgetvote` | see notes below |
-| `mnbudget getvotes` | `getbudgetvotes` | |
-| `mnbudget getinfo` | `getbudgetinfo` | see notes below |
-| `mnbudget show` | `getbudgetinfo` | see notes below |
-| `mnbudget projection` | `getbudgetprojection` | |
-| `mnbudget check` | `checkbudgets` | |
-| `mnbudget nextblock` | `getnextsuperblock` | |
+Detailed release notes follow. This overview includes changes that affect behavior, not code moves, refactors and string updates. For convenience in locating the code changes and accompanying discussion, both the pull request and git merge commit are mentioned.
 
-##### `startmasternode` Command #####
-This command now handles all cases for starting a masternode instead of having multiple commands based on the context. Command arguments have changed slightly to allow the user to decide wither or not to re-lock the wallet after the command is run. Below is the help documentation:
+### Core Features
 
-```
-startmasternode "local|all|many|missing|disabled|alias" lockwallet ( "alias" )
-
- Attempts to start one or more masternode(s)
-
-Arguments:
-1. set         (string, required) Specify which set of masternode(s) to start.
-2. lockWallet  (boolean, required) Lock wallet after completion.
-3. alias       (string) Masternode alias. Required if using 'alias' as the set.
-
-Result: (for 'local' set):
-"status"     (string) Masternode status message
-
-Result: (for other sets):
-{
-  "overall": "xxxx",     (string) Overall status message
-  "detail": [
-    {
-      "node": "xxxx",    (string) Node name or alias
-      "result": "xxxx",  (string) 'success' or 'failed'
-      "error": "xxxx"    (string) Error message, if failed
-    }
-    ,...
-  ]
-}
-
-Examples:
-> birakecoin-cli masternodestart "alias" "my_mn"
-> curl --user myusername --data-binary '{"jsonrpc": "1.0", "id":"curltest", "method": "masternodestart", "params": ["alias" "my_mn"] }' -H 'content-type: text/plain;' http://127.0.0.1:39698/
-```
-
-##### `preparebudget` & `submitbudget` Commands #####
-Due to the requirement of maintaining backwards compatibility with the legacy command, these two new commands are created to handle the preparation/submission of budget proposals. Future intention is to roll these two commands back into a single command to reduce code-duplication. Paramater arguments currently remain unchanged from the legacy command equivilent.
-
-##### `mnbudgetvote` Command #####
-This command now handles all cases for submitting MN votes on a budget proposal. Backwards compatibility with the legacy command(s) has been retained, with the exception of the `vote-alias` case due to a conflict in paramater type casting. A user running `mnbudget vote-alias` will be instructed to instead use the new `mnvote` command. Below is the full help documentation for this new command:
-
-```
-mnvote "local|many|alias" "votehash" "yes|no" ( "alias" )
-
-Vote on a budget proposal
-
-Arguments:
-1. "mode"      (string, required) The voting mode. 'local' for voting directly from a masternode, 'many' for voting with a MN controller and casting the same vote for each MN, 'alias' for voting with a MN controller and casting a vote for a single MN
-2. "votehash"  (string, required) The vote hash for the proposal
-3. "votecast"  (string, required) Your vote. 'yes' to vote for the proposal, 'no' to vote against
-4. "alias"     (string, required for 'alias' mode) The MN alias to cast a vote for.
-
-Result:
-{
-  "overall": "xxxx",      (string) The overall status message for the vote cast
-  "detail": [
-    {
-      "node": "xxxx",      (string) 'local' or the MN alias
-      "result": "xxxx",    (string) Either 'Success' or 'Failed'
-      "error": "xxxx",     (string) Error message, if vote failed
-    }
-    ,...
-  ]
-}
-
-Examples:
-> birakecoin-cli mnvote "local" "ed2f83cedee59a91406f5f47ec4d60bf5a7f9ee6293913c82976bd2d3a658041" "yes"
-> curl --user myusername --data-binary '{"jsonrpc": "1.0", "id":"curltest", "method": "mnvote", "params": ["local" "ed2f83cedee59a91406f5f47ec4d60bf5a7f9ee6293913c82976bd2d3a658041" "yes"] }' -H 'content-type: text/plain;' http://127.0.0.1:39698/
-```
-
-##### `getbudgetinfo` Command #####
-This command now combines the old `mnbudget show` and `mnbudget getinfo` commands to reduce code duplication while still maintaining backwards compatibility with the legacy commands. Given no parameters, it returns the full list of budget proposals (`mnbudget show`). A single optional parameter allows to return information on just that proposal (`mnbudget getinfo`). Below is the full help documentation:
-
-```
-getbudgetinfo ( "proposal" )
-
-Show current masternode budgets
-
-Arguments:
-1. "proposal"    (string, optional) Proposal name
-
-Result:
-[
-  {
-    "Name": "xxxx",               (string) Proposal Name
-    "URL": "xxxx",                (string) Proposal URL
-    "Hash": "xxxx",               (string) Proposal vote hash
-    "FeeHash": "xxxx",            (string) Proposal fee hash
-    "BlockStart": n,              (numeric) Proposal starting block
-    "BlockEnd": n,                (numeric) Proposal ending block
-    "TotalPaymentCount": n,       (numeric) Number of payments
-    "RemainingPaymentCount": n,   (numeric) Number of remaining payments
-    "PaymentAddress": "xxxx",     (string) BirakeCoin address of payment
-    "Ratio": x.xxx,               (numeric) Ratio of yeas vs nays
-    "Yeas": n,                    (numeric) Number of yea votes
-    "Nays": n,                    (numeric) Number of nay votes
-    "Abstains": n,                (numeric) Number of abstains
-    "TotalPayment": xxx.xxx,      (numeric) Total payment amount
-    "MonthlyPayment": xxx.xxx,    (numeric) Monthly payment amount
-    "IsEstablished": true|false,  (boolean) Established (true) or (false)
-    "IsValid": true|false,        (boolean) Valid (true) or Invalid (false)
-    "IsValidReason": "xxxx",      (string) Error message, if any
-    "fValid": true|false,         (boolean) Valid (true) or Invalid (false)
-  }
-  ,...
-]
-
-Examples:
-> birakecoin-cli getbudgetprojection
-> curl --user myusername --data-binary '{"jsonrpc": "1.0", "id":"curltest", "method": "getbudgetprojection", "params": [] }' -H 'content-type: text/plain;' http://127.0.0.1:39698/
-```
-
-#### Masternode network protocol layer reporting ####
-The results from the `listmasternodes` and `getmasternodecount` commands now includes details about which network protocol layer is being used (IPv4, IPV6, or Tor).
-
-
-2.3.1 Change log
-=================
-
-Detailed release notes follow. This overview includes changes that affect
-behavior, not code moves, refactors and string updates. For convenience in locating
-the code changes and accompanying discussion, both the pull request and
-git merge commit are mentioned.
-
-### RPC and other APIs
-- #239 `e8b92f4` [RPC] Make 'masternode status' more verbose (Mrs-X)
-- #244 `eac60dd` [RPC] Standardize RPC Commands (Fuzzbawls)
+### Build System
 
 ### P2P Protocol and Network Code
-- #248 `0d44ca2` [core] fix payment disagreements, reduce log-verbosity (Mrs-X)
+
+### GUI
+
+### RPC/REST
+
+Asm representations of scriptSig signatures now contain SIGHASH type decodes
+----------------------------------------------------------------------------
+
+The `asm` property of each scriptSig now contains the decoded signature hash
+type for each signature that provides a valid defined hash type.
+
+The following items contain assembly representations of scriptSig signatures
+and are affected by this change:
+
+- RPC `getrawtransaction`
+- RPC `decoderawtransaction`
+- REST `/rest/tx/` (JSON format)
+- REST `/rest/block/` (JSON format when including extended tx details)
+- `bitcoin-tx -json`
+
+For example, the `scriptSig.asm` property of a transaction input that
+previously showed an assembly representation of:
+
+    304502207fa7a6d1e0ee81132a269ad84e68d695483745cde8b541e3bf630749894e342a022100c1f7ab20e13e22fb95281a870f3dcf38d782e53023ee313d741ad0cfbc0c509001
+
+now shows as:
+
+    304502207fa7a6d1e0ee81132a269ad84e68d695483745cde8b541e3bf630749894e342a022100c1f7ab20e13e22fb95281a870f3dcf38d782e53023ee313d741ad0cfbc0c5090[ALL]
+
+Note that the output of the RPC `decodescript` did not change because it is
+configured specifically to process scriptPubKey and not scriptSig scripts.
+
+### Wallet
 
 ### Miscellaneous
-- #240 `1957445` [Debug Log] Increase verbosity of error-message (Mrs-X)
-- #241 #249 `b60118b` `7405e31` Nullpointer reference fixed (Mrs-X)
 
-Credits
-=======
+## Credits
 
 Thanks to everyone who directly contributed to this release:
-- Fuzzbawls
-- Mrs-X
-- amirabrams
 
-As well as everyone that helped translating on [Transifex](https://www.transifex.com/projects/p/birakecoin-project-translations/).
+
+As well as everyone that helped translating on [Transifex](https://www.transifex.com/projects/p/pivx-project-translations/), the QA team during Testing and the Node hosts supporting our Testnet.

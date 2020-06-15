@@ -1,5 +1,5 @@
 [Protocol]
-exec=birakecoin-qt '%u'
+exec=pivx-qt '%u'
 protocol=pivx
 input=none
 output=none

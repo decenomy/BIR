@@ -1,5 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2014 The Bitcoin developers
+// Copyright (c) 2017-2020 The PIVX developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -11,13 +12,16 @@
 #include <stdlib.h>
 #include <string>
 
+extern const std::string CURRENCY_UNIT;
+
+/** Amount in PIV (Can be negative) */
 typedef int64_t CAmount;
 
 static const CAmount COIN = 100000000;
 static const CAmount CENT = 1000000;
 
-/** Type-safe wrapper class to for fee rates
- * (how much to pay based on transaction size)
+/**
+ * Fee rate in PIV per kilobyte: CAmount / kB
  */
 class CFeeRate
 {
@@ -42,7 +46,7 @@ public:
     ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion)
+    inline void SerializationOp(Stream& s, Operation ser_action)
     {
         READWRITE(nSatoshisPerK);
     }

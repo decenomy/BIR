@@ -4,6 +4,18 @@
 
 #define LIBSECP256K1_CONFIG_H
 
+/* Define if building universal (internal helper macro) */
+#undef AC_APPLE_UNIVERSAL_BUILD
+
+/* Define this symbol to compile out all VERIFY code */
+#undef COVERAGE
+
+/* Define this symbol to enable the ECDH module */
+#undef ENABLE_MODULE_ECDH
+
+/* Define this symbol to enable the ECDSA pubkey recovery module */
+#undef ENABLE_MODULE_RECOVERY
+
 /* Define this symbol if OpenSSL EC functions are available */
 #undef ENABLE_OPENSSL_TESTS
 
@@ -15,6 +27,9 @@
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
+
+/* Define this symbol if libcrypto is installed */
+#undef HAVE_LIBCRYPTO
 
 /* Define this symbol if libgmp is installed */
 #undef HAVE_LIBGMP
@@ -73,25 +88,24 @@
 /* Define to 1 if you have the ANSI C header files. */
 #undef STDC_HEADERS
 
+/* Define this symbol to enable x86_64 assembly optimizations */
+#undef USE_ASM_X86_64
+
+/* Define this symbol to use a statically generated ecmult table */
+#undef USE_ECMULT_STATIC_PRECOMPUTATION
+
 /* Define this symbol to use endomorphism optimization */
 #undef USE_ENDOMORPHISM
+
+/* Define this symbol if an external (non-inline) assembly implementation is
+   used */
+#undef USE_EXTERNAL_ASM
 
 /* Define this symbol to use the FIELD_10X26 implementation */
 #undef USE_FIELD_10X26
 
 /* Define this symbol to use the FIELD_5X52 implementation */
 #undef USE_FIELD_5X52
-
-/* Define this symbol to use the assembly version for the 5x52 field
-   implementation */
-#undef USE_FIELD_5X52_ASM
-
-/* Define this symbol to use the __int128 version for the 5x52 field
-   implementation */
-#undef USE_FIELD_5X52_INT128
-
-/* Define this symbol to use the FIELD_GMP implementation */
-#undef USE_FIELD_GMP
 
 /* Define this symbol to use the native field inverse implementation */
 #undef USE_FIELD_INV_BUILTIN
@@ -120,4 +134,16 @@
 /* Version number of package */
 #undef VERSION
 
-#endif //LIBSECP256K1_CONFIG_H
+/* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most
+   significant byte first (like Motorola and SPARC, unlike Intel). */
+#if defined AC_APPLE_UNIVERSAL_BUILD
+# if defined __BIG_ENDIAN__
+#  define WORDS_BIGENDIAN 1
+# endif
+#else
+# ifndef WORDS_BIGENDIAN
+#  undef WORDS_BIGENDIAN
+# endif
+#endif
+
+#endif /*LIBSECP256K1_CONFIG_H*/
