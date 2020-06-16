@@ -3608,7 +3608,7 @@ bool CheckBlockHeader(const CBlockHeader& block, CValidationState& state, bool f
             REJECT_INVALID, "block-version");
         }
     } else {
-        if (block.nVersion >= 4 && !sporkManager.IsSporkActive(SPORK_15_NEW_PROTOCOL_ENFORCEMENT_2) && masternodeSync.IsSynced())
+        if (block.nVersion >= 4 && 0)
             return state.DoS(50, error("CheckBlockHeader() : block version must be below 4 before ZerocoinStartHeight"),
             REJECT_INVALID, "block-version");
     }

@@ -263,7 +263,7 @@ void CMasternodeSync::Process()
         /*
             Resync if we lose all masternodes from sleep/wake or failure to sync originally
         */
-        if (mnodeman.CountEnabled() == 0 && 0) {
+        if (mnodeman.CountEnabled() == 0) {
             LogPrint(BCLog::MASTERNODE, "CMasternodeSync::Process() - SYNC FAILED 0 nodes found");
             Reset();
         } else
