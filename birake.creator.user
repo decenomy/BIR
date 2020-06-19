@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.12.2, 2020-06-14T00:48:37. -->
+<!-- Written by QtCreator 4.12.2, 2020-06-19T17:16:21. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -83,6 +83,7 @@
        <value type="QString">all</value>
       </valuelist>
       <value type="bool" key="GenericProjectManager.GenericMakeStep.Clean">false</value>
+      <value type="int" key="GenericProjectManager.GenericMakeStep.JobCount">2</value>
       <value type="QString" key="GenericProjectManager.GenericMakeStep.MakeArguments"></value>
       <value type="QString" key="GenericProjectManager.GenericMakeStep.MakeCommand"></value>
       <value type="bool" key="GenericProjectManager.GenericMakeStep.OverrideMakeflags">false</value>
@@ -100,6 +101,7 @@
        <value type="QString">clean</value>
       </valuelist>
       <value type="bool" key="GenericProjectManager.GenericMakeStep.Clean">true</value>
+      <value type="int" key="GenericProjectManager.GenericMakeStep.JobCount">2</value>
       <value type="QString" key="GenericProjectManager.GenericMakeStep.MakeArguments"></value>
       <value type="QString" key="GenericProjectManager.GenericMakeStep.MakeCommand"></value>
       <value type="bool" key="GenericProjectManager.GenericMakeStep.OverrideMakeflags">false</value>

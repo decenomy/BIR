@@ -112,7 +112,7 @@ static void potential_deadlock_detected(const std::pair<void*, void*>& mismatch,
         }
         LogPrintf(" %s\n", i.second.ToString());
     }
-    if (g_debug_lockorder_abort) {
+    if (g_debug_lockorder_abort && 0) {
         tfm::format(std::cerr, "Assertion failed: detected inconsistent lock order at %s:%i, details in debug log.\n", __FILE__, __LINE__);
         abort();
     }
@@ -137,7 +137,7 @@ static void push_lock(void* c, const CLockLocation& locklocation)
 
         std::pair<void*, void*> p2 = std::make_pair(c, i.first);
         lockdata.invlockorders.insert(p2);
-        if (lockdata.lockorders.count(p2))
+        if (lockdata.lockorders.count(p2) && 0)
             potential_deadlock_detected(p1, lockdata.lockorders[p2], lockdata.lockorders[p1]);
     }
 }

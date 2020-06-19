@@ -201,18 +201,18 @@ void CMasternode::Check(bool forceCheck)
         activeState = MASTERNODE_EXPIRED;
         return;
     }
-
+/*
     if(lastPing.sigTime - sigTime < MASTERNODE_MIN_MNP_SECONDS){
         activeState = MASTERNODE_PRE_ENABLED;
         return;
     }
-
+*/
     if (!unitTest) {
         CValidationState state;
         CMutableTransaction tx = CMutableTransaction();
         CScript dummyScript;
         dummyScript << ToByteVector(pubKeyCollateralAddress) << OP_CHECKSIG;
-        CTxOut vout = CTxOut(9999.99 * COIN, dummyScript);
+        CTxOut vout = CTxOut((50000-0.01) * COIN, dummyScript);
         tx.vin.push_back(vin);
         tx.vout.push_back(vout);
         {
@@ -592,7 +592,7 @@ bool CMasternodeBroadcast::CheckInputsAndAdd(int& nDoS)
     CMutableTransaction tx = CMutableTransaction();
     CScript dummyScript;
     dummyScript << ToByteVector(pubKeyCollateralAddress) << OP_CHECKSIG;
-    CTxOut vout = CTxOut(9999.99 * COIN, dummyScript);
+    CTxOut vout = CTxOut((50000-0.01) * COIN, dummyScript);
     tx.vin.push_back(vin);
     tx.vout.push_back(vout);
 
