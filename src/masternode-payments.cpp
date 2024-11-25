@@ -11,6 +11,7 @@
 #include "masternode-sync.h"
 #include "masternodeman.h"
 #include "netmessagemaker.h"
+#include "rewards.h"
 #include "spork.h"
 #include "sync.h"
 #include "util.h"
@@ -20,9 +21,6 @@
 
 /** Object for who's going to get paid on which blocks */
 CMasternodePayments masternodePayments;
-
-uint64_t reconsiderWindowMin    = 0;
-uint64_t reconsiderWindowTime   = 0;
 
 RecursiveMutex cs_vecPayments;
 RecursiveMutex cs_mapMasternodeBlocks;
@@ -255,62 +253,21 @@ bool IsBlockPayeeValid(const CBlock& block, int nBlockHeight)
     const bool isPoSActive = Params().GetConsensus().NetworkUpgradeActive(nBlockHeight, Consensus::UPGRADE_POS);
     const CTransaction& txNew = (isPoSActive ? block.vtx[1] : block.vtx[0]);
 
-    auto t = GetTime();
-
-    if((t - reconsiderWindowTime) > HOUR_IN_SECONDS) {  // shift the reconsider window at each hour
-        reconsiderWindowMin = GetRand() % 10;           // choose randomly from minute 0 to minute 9
-        reconsiderWindowTime = t;
-
-        for (auto it = mapRejectedBlocks.cbegin(); it != mapRejectedBlocks.cend();) { // clean up old entries
-            it = (GetAdjustedTime() - (*it).second) > DAY_IN_SECONDS ? mapRejectedBlocks.erase(it) : std::next(it);
-        }
-    }
-
-    // if it's the mint block then verify if exists an output with the right amount and address
-    if (consensus.nMintHeight == nBlockHeight) {
-        LogPrint(BCLog::MASTERNODE, "masternode", "IsBlockPayeeValid: Check mint reward\n");
-
-        CAmount amount = consensus.nMintValue;
-        CScript payee = GetScriptForDestination(DecodeDestination(consensus.sMintAddress));
-
-        LogPrint(BCLog::MASTERNODE, "IsBlockPayeeValid, expected mint amount is %lld, coins %f\n", amount, (float)amount / COIN);
-
-        bool fMintFound = false;
-        for(CTxOut out : txNew.vout) {
-            if (payee == out.scriptPubKey && amount == out.nValue) {
-                fMintFound = true;
-            }
-        }
-
-        if(!fMintFound) return false;
-    }
-
     //check for masternode payee
     if (masternodePayments.IsTransactionValid(txNew, nBlockHeight))
         return true;
+
     LogPrint(BCLog::MASTERNODE,"Invalid mn payment detected %s\n", txNew.ToString().c_str());
 
     // fails if spork 8 is enabled and
     // spork 113 is disabled or current time is outside the reconsider window
     if (sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT)) {
-        if (!sporkManager.IsSporkActive(SPORK_113_RECONSIDER_WINDOW_ENFORCEMENT))
-        {
-            return false;
-        }
-
-        if ((t / MINUTE_IN_SECONDS) % 10 != reconsiderWindowMin)
-        {
-            return false;
-        }
-
-        LogPrint(BCLog::MASTERNODE,"Masternode payment enforcement reconsidered, accepting block\n");
+        return false;
+    } else {
+        LogPrint(BCLog::MASTERNODE,"Masternode payment enforcement is disabled, accepting block\n");
         return true;
     }
-
-    LogPrint(BCLog::MASTERNODE,"Masternode payment enforcement is disabled, accepting block\n");
-    return true;
 }
-
 
 void FillBlockPayee(CMutableTransaction& txNew, const CBlockIndex* pindexPrev, bool fProofOfStake)
 {
@@ -329,11 +286,8 @@ void CMasternodePayments::FillBlockPayee(CMutableTransaction& txNew, const CBloc
     bool hasPayment = true;
     CScript payee;
 
-    int nHeight = pindexPrev->nHeight + 1;
-    const Consensus::Params& consensus = Params().GetConsensus();
-
     //spork
-    if (!masternodePayments.GetBlockPayee(nHeight, payee)) {
+    if (!masternodePayments.GetBlockPayee(pindexPrev->nHeight + 1, payee)) {
         //no masternode detected
         CMasternode* winningNode = mnodeman.GetCurrentMasterNode(1);
         if (winningNode) {
@@ -344,21 +298,8 @@ void CMasternodePayments::FillBlockPayee(CMutableTransaction& txNew, const CBloc
         }
     }
 
-    CAmount masternodePayment = CMasternode::GetMasternodePayment(nHeight);
-    CAmount blockValue = CMasternode::GetBlockValue(nHeight);
-    CAmount nMintValue = 0;
-    CScript mintPayee;
-
-    // Mint
-    if (consensus.nMintHeight == nHeight) {
-        nMintValue = consensus.nMintValue;
-        mintPayee = GetScriptForDestination(DecodeDestination(consensus.sMintAddress));
-    }
-
-    //subtract mn payment from the stake reward plus the mint value
-    CAmount reductionAmount = masternodePayment + nMintValue;
-
     if (hasPayment) {
+        CAmount masternodePayment = CMasternode::GetMasternodePayment(pindexPrev->nHeight + 1);
         if (fProofOfStake) {
             /**For Proof Of Stake vout[0] must be null
              * Stake reward can be split into many different outputs, so we must
@@ -389,44 +330,13 @@ void CMasternodePayments::FillBlockPayee(CMutableTransaction& txNew, const CBloc
             txNew.vout.resize(2);
             txNew.vout[1].scriptPubKey = payee;
             txNew.vout[1].nValue = masternodePayment;
-            txNew.vout[0].nValue = blockValue - reductionAmount;
+            txNew.vout[0].nValue = CRewards::GetBlockValue(pindexPrev->nHeight + 1) - masternodePayment;
         }
 
         CTxDestination address1;
         ExtractDestination(payee, address1);
 
         LogPrint(BCLog::MASTERNODE,"Masternode payment of %s to %s\n", FormatMoney(masternodePayment).c_str(), EncodeDestination(address1).c_str());
-    } else {
-        if(nMintValue > 0) {
-            // removes the mint value if there is no masternode to pay
-            if (fProofOfStake) {
-                unsigned int i = txNew.vout.size();
-                if (i == 2) {
-                    // Majority of cases; do it quick and move on
-                    txNew.vout[i - 1].nValue -= nMintValue;
-                } else if (i > 2) {
-                    // special case, stake is split between (i-1) outputs
-                    unsigned int outputs = i-1;
-                    CAmount mnPaymentSplit = nMintValue / outputs;
-                    CAmount mnPaymentRemainder = nMintValue - (mnPaymentSplit * outputs);
-                    for (unsigned int j=1; j<=outputs; j++) {
-                        txNew.vout[j].nValue -= mnPaymentSplit;
-                    }
-                    // in case it's not an even division, take the last bit of dust from the last one
-                    txNew.vout[outputs].nValue -= mnPaymentRemainder;
-                }
-            } else {
-                txNew.vout[0].nValue = blockValue - nMintValue;
-            }
-        }
-    }
-
-    // Adds mint value
-    if(nMintValue > 0) {
-        unsigned int i = txNew.vout.size();
-        txNew.vout.resize(i + 1);
-        txNew.vout[i].scriptPubKey = mintPayee;
-        txNew.vout[i].nValue = nMintValue;
     }
 }
 

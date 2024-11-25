@@ -6,6 +6,7 @@ reset-files.bash
 *.tar.gz
 *.exe
 configure~
+deploy/
 
 # DSW
 src/bench/bench___decenomy__
